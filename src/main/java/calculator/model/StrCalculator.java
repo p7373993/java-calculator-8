@@ -48,5 +48,9 @@ public class StrCalculator {
         if (num <= 0) {
             throw new IllegalArgumentException("양수가 아닙니다");
         }
+
+        if (!token.matches("[1-9][0-9]*")) {
+            throw new IllegalArgumentException("비허용 문자 사용");
+        }
     }
 }
