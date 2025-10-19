@@ -23,7 +23,7 @@ public class StrCalculator {
             }
             String quoted = Pattern.quote(custom);
 
-            deliRegex = "[,:]" + quoted;
+            deliRegex = "[,:]|" + quoted;
 
             numbers = numbers.substring(nl + 1);
         }
