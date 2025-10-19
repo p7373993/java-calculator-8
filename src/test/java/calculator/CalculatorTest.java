@@ -59,11 +59,11 @@ public class CalculatorTest extends NsTest {
     }
 
     @Test
-    void 공백_테스트() {
-        assertSimpleTest(() -> {
-            run("3 : 4");
-            assertThat(output()).contains("결과 : 7");
-        });
+    void 공백_예외_테스트() {
+        assertSimpleTest(() ->
+                assertThatThrownBy(() -> runException("2 : 3"))
+                        .isInstanceOf(IllegalArgumentException.class)
+        );
     }
 
     @Test

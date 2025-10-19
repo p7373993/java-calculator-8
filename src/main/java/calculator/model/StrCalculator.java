@@ -32,11 +32,21 @@ public class StrCalculator {
         int sum = 0;
         for (String t : tokens) {
             int num = Integer.parseInt(t);
-            if (num <= 0) {
-                throw new IllegalArgumentException("양수가 아닙니다" + num);
-            }
+            validToken(t);
             sum += num;
         }
         return sum;
+    }
+
+    private void validToken(String token) {
+        //공백 오류
+        if (token.contains(" ")) {
+            throw new IllegalArgumentException("문자열 내 공백 사용 금지 ");
+        }
+
+        int num = Integer.parseInt(token);
+        if (num <= 0) {
+            throw new IllegalArgumentException("양수가 아닙니다");
+        }
     }
 }
