@@ -4,11 +4,25 @@ import java.util.regex.Pattern;
 
 public class StrCalculator {
     public int add(String input) {
-        if (input == null || input.isBlank()) {
-            return 0;//공백은 0반환
+        //빈문자열은 0 반환
+        if (isBlank(input)) {
+            return 0;
         }
         input = input.replace("\\n", "\n");
 
+        Parsed parsed = parseHeader(input);
+        String[] tokens = splitTokens(parsed);
+
+        return sumTokens(tokens);
+    }
+
+    // 빈문자열 체크
+    private boolean isBlank(String input) {
+        return (input == null || input.isBlank());
+    }
+
+    //커스텀 구분자와 나머지 숫자 분리(ex: Parsed.deliRegex, Parsed.numbers)
+    private Parsed parseHeader(String input) {
         String deliRegex = "[,:]";
         String numbers = input;
 
@@ -21,23 +35,31 @@ public class StrCalculator {
             if (custom.isEmpty()) {
                 throw new IllegalArgumentException("커스텀 구분자가 비었습니다");
             }
+
             String quoted = Pattern.quote(custom);
-
             deliRegex = "[,:]|" + quoted;
-
             numbers = numbers.substring(nl + 1);
         }
+        return new Parsed(deliRegex, numbers);
+    }
 
-        String[] tokens = numbers.split(deliRegex, -1);
+    //구분자에 맞춰 숫자 분리
+    private String[] splitTokens(Parsed parsed) {
+        return parsed.numbers().split(parsed.deliRegex(), -1);
+    }
+
+    //숫자 합
+    private int sumTokens(String[] tokens) {
         int sum = 0;
         for (String t : tokens) {
-            int num = Integer.parseInt(t);
             validToken(t);
+            int num = Integer.parseInt(t);
             sum += num;
         }
         return sum;
     }
 
+    //각 숫자 예외 처리
     private void validToken(String token) {
 
         //연속, 마지막 구분자(ex)"3::2","3:"
@@ -59,5 +81,9 @@ public class StrCalculator {
         if (!token.matches("[1-9][0-9]*")) {
             throw new IllegalArgumentException("비허용 문자 사용");
         }
+    }
+
+    //record타입을 사용해서 데아터 저장
+    private record Parsed(String deliRegex, String numbers) {
     }
 }
